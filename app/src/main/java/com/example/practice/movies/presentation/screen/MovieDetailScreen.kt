@@ -1,0 +1,181 @@
+package com.example.practice.movies.presentation.screen
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.AsyncImage
+import com.example.practice.R
+import com.example.practice.movies.DEFAULT_POSTER_URL
+import com.example.practice.movies.presentation.MockData
+import com.example.practice.movies.presentation.model.MovieDetailViewState
+import com.example.practice.movies.presentation.viewModel.MovieDetailViewModel
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MovieDetailScreen(
+    viewModel: MovieDetailViewModel
+) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    Scaffold(
+        contentWindowInsets = WindowInsets(0.dp),
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(R.string.movie_info_title)
+                    )
+                },
+                navigationIcon = {
+                    IconButton(
+                        onClick = { viewModel.onBack() }
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = null
+                        )
+                    }
+                }
+            )
+        }
+    ) { padding ->
+        MovieDetailContent(state, Modifier.padding(padding))
+    }
+}
+
+@Composable
+fun MovieDetailContent(
+    state: MovieDetailViewState,
+    modifier: Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp)
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        AsyncImage(
+            model = state.movie.posterUrl ?: DEFAULT_POSTER_URL,
+            contentDescription = null,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp)
+                .clip(RoundedCornerShape(8.dp))
+        )
+        Text(
+            text = if (
+                !state.movie.name.isNullOrBlank() &&
+                !state.movie.alternativeName.isNullOrBlank()
+            ) {
+                "${state.movie.name} (${state.movie.alternativeName})"
+            } else {
+                state.movie.name ?: state.movie.alternativeName ?: "Без названия"
+            },
+            style = MaterialTheme.typography.titleLarge,
+        )
+        Text(
+            text = state.movie.description ?: "Описание отсутствует",
+            style = MaterialTheme.typography.bodyMedium,
+        )
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp),
+            modifier = Modifier
+                .padding(bottom = 8.dp)
+        ) {
+            state.movie.genres.forEach { genre ->
+                Card (
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    ),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                ) {
+                    Text(
+                        text = genre.name,
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                    )
+                }
+            }
+        }
+        HorizontalDivider()
+        Text(
+            text = buildAnnotatedString {
+                withStyle(style = SpanStyle(
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
+                )) {
+                    append("Год выпуска: ")
+                }
+                append(state.movie.year.toString())
+            }
+        )
+
+        val countryTitle = if (state.movie.isMultipleCountries) "Страны" else "Страна"
+        Text(
+            text = buildAnnotatedString {
+                withStyle(style = SpanStyle(
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
+                )) {
+                    append("$countryTitle: ")
+                }
+                append(
+                    if (state.movie.isMultipleCountries) {
+                        state.movie.countries.joinToString(", ") { it.name }
+                    } else {
+                        state.movie.countries.firstOrNull()?.name ?: "Неизвестно"
+                    }
+                )
+            },
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MovieDetailScreenPreview() {
+    MovieDetailContent(
+        MovieDetailViewState(MockData.getMovies().first()),
+        Modifier
+    )
+}
