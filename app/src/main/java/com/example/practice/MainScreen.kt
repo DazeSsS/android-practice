@@ -25,11 +25,16 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.scene.SinglePaneSceneStrategy
 import androidx.navigation3.ui.NavDisplay
+import com.example.practice.movies.presentation.MockData
 import com.example.practice.movies.presentation.model.MovieUiModel
 import com.example.practice.movies.presentation.screen.MovieDetailScreen
 import com.example.practice.movies.presentation.screen.MovieListScreen
+import com.example.practice.movies.presentation.viewModel.MovieDetailViewModel
+import com.example.practice.movies.presentation.viewModel.MovieListViewModel
 import com.example.practice.navigation.Route
 import com.example.practice.navigation.TopLevelBackStack
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent.inject
 
 interface TopLevelRoute : Route {
@@ -80,7 +85,10 @@ fun MainScreen() {
             ),
             entryProvider = entryProvider {
                 entry<Movies> {
-                    MovieListScreen()
+                    val viewModel = koinViewModel<MovieListViewModel>() {
+                        parametersOf(MockData.getMovies())
+                    }
+                    MovieListScreen(viewModel)
                 }
                 entry<Favorites> {
                     FavoritesScreen()
@@ -89,7 +97,10 @@ fun MainScreen() {
                     ProfileScreen()
                 }
                 entry<MovieDetail> {
-                    MovieDetailScreen(it.movie)
+                    val viewModel = koinViewModel<MovieDetailViewModel>() {
+                        parametersOf(it.movie)
+                    }
+                    MovieDetailScreen(viewModel)
                 }
             }
         )

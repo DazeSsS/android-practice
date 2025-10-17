@@ -27,18 +27,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.practice.movies.DEFAULT_POSTER_URL
-import com.example.practice.movies.presentation.MockData
 import com.example.practice.movies.presentation.model.MovieUiModel
 import com.example.practice.movies.presentation.viewModel.MovieListViewModel
 import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 @Composable
-fun MovieListScreen() {
-    val viewModel = koinViewModel<MovieListViewModel>() {
-        parametersOf(MockData.getMovies())
-    }
-
+fun MovieListScreen(
+    viewModel: MovieListViewModel
+) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LazyColumn {
@@ -132,5 +128,5 @@ fun MovieListItem(movie: MovieUiModel, onMovieClick: (MovieUiModel) -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun MovieListPreview() {
-    MovieListScreen()
+    MovieListScreen(koinViewModel<MovieListViewModel>())
 }

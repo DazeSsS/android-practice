@@ -41,20 +41,13 @@ import com.example.practice.R
 import com.example.practice.movies.DEFAULT_POSTER_URL
 import com.example.practice.movies.presentation.MockData
 import com.example.practice.movies.presentation.model.MovieDetailViewState
-import com.example.practice.movies.presentation.model.MovieUiModel
 import com.example.practice.movies.presentation.viewModel.MovieDetailViewModel
-import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovieDetailScreen(
-    movie: MovieUiModel,
+    viewModel: MovieDetailViewModel
 ) {
-    val viewModel = koinViewModel<MovieDetailViewModel>() {
-        parametersOf(movie)
-    }
-
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     Scaffold(
