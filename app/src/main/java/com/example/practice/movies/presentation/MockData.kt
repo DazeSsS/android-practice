@@ -1,7 +1,5 @@
 package com.example.practice.movies.presentation
 
-import com.example.practice.movies.presentation.model.CountryUiModel
-import com.example.practice.movies.presentation.model.GenreUiModel
 import com.example.practice.movies.presentation.model.MovieUiModel
 
 object MockData {
@@ -14,13 +12,13 @@ object MockData {
             year = 2014,
             posterUrl = "https://avatars.mds.yandex.net/get-mpic/11763878/2a0000018b4350ed816ef542700f80914efa/orig",
             genres = listOf(
-                GenreUiModel(name = "фантастика"),
-                GenreUiModel(name = "драма"),
-                GenreUiModel(name = "приключения")
+                "фантастика",
+                "драма",
+                "приключения"
             ),
             countries = listOf(
-                CountryUiModel(name = "США"),
-                CountryUiModel(name = "Великобритания")
+                "США",
+                "Великобритания"
             )
         ),
         MovieUiModel(
@@ -31,11 +29,11 @@ object MockData {
             year = 1972,
             posterUrl = "https://www.boredpanda.com/blog/wp-content/uploads/2020/10/movie-missing-point-description-21-5f97d772367a8__700.jpg",
             genres = listOf(
-                GenreUiModel(name = "криминал"),
-                GenreUiModel(name = "драма")
+                "криминал",
+                "драма"
             ),
             countries = listOf(
-                CountryUiModel(name = "США")
+                "США"
             )
         ),
         MovieUiModel(
@@ -46,10 +44,10 @@ object MockData {
             year = 1994,
             posterUrl = "https://static.tvtropes.org/pmwiki/pub/images/6fa79a3251cbf9c1c929aaec71ebb1309c57566a61d490045de285525914f285_ur12002c1600_ri__waifu2x_art_noise1.png",
             genres = listOf(
-                GenreUiModel(name = "драма")
+                "драма"
             ),
             countries = listOf(
-                CountryUiModel(name = "США")
+                "США"
             )
         ),
         MovieUiModel(
@@ -60,12 +58,12 @@ object MockData {
             year = 1985,
             posterUrl = null,
             genres = listOf(
-                GenreUiModel(name = "фантастика"),
-                GenreUiModel(name = "комедия"),
-                GenreUiModel(name = "приключения"),
+                "фантастика",
+                "комедия",
+                "приключения",
             ),
             countries = listOf(
-                CountryUiModel(name = "США")
+                "США"
             )
         ),
         MovieUiModel(
@@ -76,11 +74,11 @@ object MockData {
             year = 1994,
             posterUrl = "https://avatars.mds.yandex.net/get-mpic/11763878/2a0000018b432ab71a13344429f98285e6ae/orig",
             genres = listOf(
-                GenreUiModel(name = "криминал"),
-                GenreUiModel(name = "драма")
+                "криминал",
+                "драма"
             ),
             countries = listOf(
-                CountryUiModel(name = "США")
+                "США"
             )
         ),
         MovieUiModel(
@@ -91,9 +89,9 @@ object MockData {
             year = 2018,
             posterUrl = "https://i.scdn.co/image/ab67616d0000b273a8305711307027f3b0c6d4eb",
             genres = listOf(
-                GenreUiModel(name = "драма"),
-                GenreUiModel(name = "биография"),
-                GenreUiModel(name = "комедия")
+                "драма",
+                "биография",
+                "комедия"
             ),
             countries = emptyList()
         ),
@@ -105,13 +103,13 @@ object MockData {
             year = 1994,
             posterUrl = "https://m.media-amazon.com/images/I/71PY8+SZeDL.jpg",
             genres = listOf(
-                GenreUiModel(name = "криминал"),
-                GenreUiModel(name = "драма"),
-                GenreUiModel(name = "боевик")
+                "криминал",
+                "драма",
+                "боевик"
             ),
             countries = listOf(
-                CountryUiModel(name = "Франция"),
-                CountryUiModel(name = "США")
+                "Франция",
+                "США"
             )
         ),
         MovieUiModel(
@@ -122,13 +120,13 @@ object MockData {
             year = 2019,
             posterUrl = "https://i.pinimg.com/736x/14/b3/8d/14b38df3a0cb181b4f465bfa54e29f11.jpg",
             genres = listOf(
-                GenreUiModel(name = "драма"),
-                GenreUiModel(name = "криминал"),
-                GenreUiModel(name = "триллер")
+                "драма",
+                "криминал",
+                "триллер"
             ),
             countries = listOf(
-                CountryUiModel(name = "США"),
-                CountryUiModel(name = "Канада")
+                "США",
+                "Канада"
             )
         ),
         MovieUiModel(
@@ -139,13 +137,13 @@ object MockData {
             year = 2009,
             posterUrl = "https://images.kinorium.com/movie/poster/372833/w1500_53524769.jpg",
             genres = listOf(
-                GenreUiModel(name = "фантастика"),
-                GenreUiModel(name = "приключения"),
-                GenreUiModel(name = "боевик")
+                "фантастика",
+                "приключения",
+                "боевик"
             ),
             countries = listOf(
-                CountryUiModel(name = "США"),
-                CountryUiModel(name = "Великобритания")
+                "США",
+                "Великобритания"
             )
         ),
         MovieUiModel(
@@ -156,12 +154,12 @@ object MockData {
             year = 2010,
             posterUrl = "https://images.kinorium.com/movie/poster/431590/w1500_37534317.jpg",
             genres = listOf(
-                GenreUiModel(name = "триллер"),
-                GenreUiModel(name = "детектив"),
-                GenreUiModel(name = "драма")
+                "триллер",
+                "детектив",
+                "драма"
             ),
             countries = listOf(
-                CountryUiModel(name = "США")
+                "США"
             )
         )
     )

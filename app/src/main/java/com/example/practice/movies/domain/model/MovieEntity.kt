@@ -1,9 +1,6 @@
-package com.example.practice.movies.presentation.model
+package com.example.practice.movies.domain.model
 
-import kotlinx.serialization.Serializable
-
-@Serializable
-data class MovieUiModel(
+class MovieEntity(
     val id: Int,
     val name: String?,
     val alternativeName: String?,
@@ -12,6 +9,4 @@ data class MovieUiModel(
     val posterUrl: String?,
     val genres: List<String> = emptyList(),
     val countries: List<String> = emptyList()
-) {
-    val isMultipleCountries: Boolean get() = countries.count() > 1
-}
+)

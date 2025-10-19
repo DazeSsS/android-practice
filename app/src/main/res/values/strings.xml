@@ -2,4 +2,6 @@
     <string name="app_name">Practice</string>
     <string name="movie_info_title">Информация о фильме</string>
     <string name="movies_title">Фильмы</string>
+
+    <string name="error_occured">Произошла ошибка</string>
 </resources>

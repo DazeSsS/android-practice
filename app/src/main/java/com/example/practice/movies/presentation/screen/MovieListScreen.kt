@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -20,15 +20,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.practice.movies.DEFAULT_POSTER_URL
+import com.example.practice.movies.presentation.model.MovieListViewState
 import com.example.practice.movies.presentation.model.MovieUiModel
 import com.example.practice.movies.presentation.viewModel.MovieListViewModel
+import com.example.practice.uikit.FullscreenError
+import com.example.practice.uikit.FullscreenLoading
+import com.example.practice.uikit.Spacing
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -37,10 +40,38 @@ fun MovieListScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    LazyColumn {
-        state.movies.forEach { movie ->
-            item(key = movie.id) {
-                MovieListItem(movie) { viewModel.showMovieDetail(it) }
+    MovieListScreenContent(
+        state.state,
+        viewModel::onMovieClick,
+        viewModel::onRetryClick
+    )
+}
+
+@Composable
+fun MovieListScreenContent(
+    state: MovieListViewState.State,
+    onMovieClick: (MovieUiModel) -> Unit = {},
+    onRetryClick: () -> Unit = {},
+) {
+    when (state) {
+        MovieListViewState.State.Loading -> {
+            FullscreenLoading()
+        }
+
+        is MovieListViewState.State.Error -> {
+            FullscreenError(
+                retry = onRetryClick,
+                text = state.error
+            )
+        }
+
+        is MovieListViewState.State.Success -> {
+            LazyColumn {
+                state.data.forEach { movie ->
+                    item(key = movie.id) {
+                        MovieListItem(movie, onMovieClick)
+                    }
+                }
             }
         }
     }
@@ -51,8 +82,8 @@ fun MovieListItem(movie: MovieUiModel, onMovieClick: (MovieUiModel) -> Unit) {
     Column(
         modifier = Modifier
             .clickable { onMovieClick(movie) }
-            .padding(horizontal = 16.dp)
-            .padding(top = 8.dp)
+            .padding(horizontal = Spacing.large)
+            .padding(top = Spacing.medium)
     ) {
         Row(
             modifier = Modifier
@@ -61,7 +92,7 @@ fun MovieListItem(movie: MovieUiModel, onMovieClick: (MovieUiModel) -> Unit) {
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(end = 16.dp)
+                    .padding(end = Spacing.large)
             ) {
                 Text(
                     text = if (
@@ -76,7 +107,7 @@ fun MovieListItem(movie: MovieUiModel, onMovieClick: (MovieUiModel) -> Unit) {
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier
-                        .padding(vertical = 4.dp)
+                        .padding(vertical = Spacing.small)
                 )
                 Text(
                     text = movie.description ?: "Описание отсутствует",
@@ -89,12 +120,12 @@ fun MovieListItem(movie: MovieUiModel, onMovieClick: (MovieUiModel) -> Unit) {
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
                     verticalArrangement = Arrangement.spacedBy(6.dp),
                     modifier = Modifier
-                        .padding(top = 8.dp)
-                        .padding(bottom = 12.dp)
+                        .padding(top = Spacing.medium)
+                        .padding(bottom = Spacing.big)
                 ) {
                     movie.genres.forEach { genre ->
                         Card (
-                            shape = RoundedCornerShape(16.dp),
+                            shape = RoundedCornerShape(Spacing.large),
                             colors = CardDefaults.cardColors(
                                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer
@@ -102,9 +133,10 @@ fun MovieListItem(movie: MovieUiModel, onMovieClick: (MovieUiModel) -> Unit) {
                             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
                         ) {
                             Text(
-                                text = genre.name,
+                                text = genre,
                                 style = MaterialTheme.typography.bodySmall,
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                                modifier = Modifier
+                                    .padding(horizontal = Spacing.medium, vertical = Spacing.small),
                             )
                         }
                     }
@@ -114,11 +146,10 @@ fun MovieListItem(movie: MovieUiModel, onMovieClick: (MovieUiModel) -> Unit) {
                 model = movie.posterUrl ?: DEFAULT_POSTER_URL,
                 contentDescription = null,
                 modifier = Modifier
-                    .padding(top = 8.dp)
-                    .padding(bottom = 16.dp)
-                    .size(100.dp)
-                    .clip(RoundedCornerShape(8.dp)),
-                contentScale = ContentScale.Crop
+                    .padding(top = Spacing.medium)
+                    .padding(bottom = Spacing.large)
+                    .width(100.dp)
+                    .clip(RoundedCornerShape(Spacing.medium)),
             )
         }
         HorizontalDivider()
