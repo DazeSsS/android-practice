@@ -19,13 +19,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.scene.SinglePaneSceneStrategy
 import androidx.navigation3.ui.NavDisplay
-import com.example.practice.movies.presentation.MockData
 import com.example.practice.movies.presentation.model.MovieUiModel
 import com.example.practice.movies.presentation.screen.MovieDetailScreen
 import com.example.practice.movies.presentation.screen.MovieListScreen
@@ -33,6 +31,7 @@ import com.example.practice.movies.presentation.viewModel.MovieDetailViewModel
 import com.example.practice.movies.presentation.viewModel.MovieListViewModel
 import com.example.practice.navigation.Route
 import com.example.practice.navigation.TopLevelBackStack
+import com.example.practice.uikit.Spacing
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent.inject
@@ -85,9 +84,7 @@ fun MainScreen() {
             ),
             entryProvider = entryProvider {
                 entry<Movies> {
-                    val viewModel = koinViewModel<MovieListViewModel>() {
-                        parametersOf(MockData.getMovies())
-                    }
+                    val viewModel = koinViewModel<MovieListViewModel>()
                     MovieListScreen(viewModel)
                 }
                 entry<Favorites> {
@@ -115,7 +112,7 @@ fun FavoritesScreen() {
         textAlign = TextAlign.Center,
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 16.dp)
+            .padding(top = Spacing.large)
     )
 }
 
@@ -127,6 +124,6 @@ fun ProfileScreen() {
         textAlign = TextAlign.Center,
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 16.dp)
+            .padding(top = Spacing.large)
     )
 }

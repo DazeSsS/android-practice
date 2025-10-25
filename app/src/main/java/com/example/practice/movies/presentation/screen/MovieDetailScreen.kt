@@ -42,6 +42,7 @@ import com.example.practice.movies.DEFAULT_POSTER_URL
 import com.example.practice.movies.presentation.MockData
 import com.example.practice.movies.presentation.model.MovieDetailViewState
 import com.example.practice.movies.presentation.viewModel.MovieDetailViewModel
+import com.example.practice.uikit.Spacing
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -84,17 +85,17 @@ fun MovieDetailContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = Spacing.large)
             .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(Spacing.medium),
     ) {
         AsyncImage(
             model = state.movie.posterUrl ?: DEFAULT_POSTER_URL,
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 8.dp)
-                .clip(RoundedCornerShape(8.dp))
+                .padding(bottom = Spacing.medium)
+                .clip(RoundedCornerShape(Spacing.medium))
         )
         Text(
             text = if (
@@ -115,7 +116,7 @@ fun MovieDetailContent(
             horizontalArrangement = Arrangement.spacedBy(6.dp),
             verticalArrangement = Arrangement.spacedBy(6.dp),
             modifier = Modifier
-                .padding(bottom = 8.dp)
+                .padding(bottom = Spacing.medium)
         ) {
             state.movie.genres.forEach { genre ->
                 Card (
@@ -127,7 +128,7 @@ fun MovieDetailContent(
                     elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
                 ) {
                     Text(
-                        text = genre.name,
+                        text = genre,
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
                     )
@@ -160,13 +161,13 @@ fun MovieDetailContent(
                 }
                 append(
                     if (state.movie.isMultipleCountries) {
-                        state.movie.countries.joinToString(", ") { it.name }
+                        state.movie.countries.joinToString(", ") { it }
                     } else {
-                        state.movie.countries.firstOrNull()?.name ?: "Неизвестно"
+                        state.movie.countries.firstOrNull() ?: "Неизвестно"
                     }
                 )
             },
-            modifier = Modifier.padding(bottom = 16.dp)
+            modifier = Modifier.padding(bottom = Spacing.large)
         )
     }
 }
