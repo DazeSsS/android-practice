@@ -17,9 +17,17 @@ class MovieListDocument(
     val alternativeName: String?,
     val description: String?,
     val year: Int?,
+    val rating: Rating,
     val poster: PosterModel?,
     val genres: List<GenresModel> = emptyList(),
     val countries: List<CountriesModel> = emptyList()
+)
+
+@Keep
+@Serializable
+class Rating(
+    val kp: Float?,
+    val imdb: Float?
 )
 
 @Keep

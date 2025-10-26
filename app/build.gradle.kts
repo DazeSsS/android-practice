@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.jetbrains.kotlin.serialization)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -78,7 +79,7 @@ dependencies {
     // DI
     implementation(libs.bundles.koin)
 
-    // network
+    // Network
     implementation(libs.retrofit)
     implementation(libs.retrofit.serialization)
     implementation(libs.kotlinx.serialization.json)
@@ -86,4 +87,12 @@ dependencies {
     // Chucker
     debugImplementation(libs.chucker)
     releaseImplementation(libs.chucker.no.op)
+
+    // DB
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    annotationProcessor(libs.androidx.room.compiler)
+    implementation(libs.room.ktx)
+
+    implementation(libs.androidx.datastore.preferences)
 }

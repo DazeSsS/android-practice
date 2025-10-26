@@ -19,21 +19,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
+import androidx.navigation3.scene.DialogSceneStrategy
 import androidx.navigation3.scene.SinglePaneSceneStrategy
 import androidx.navigation3.ui.NavDisplay
 import com.example.practice.movies.presentation.model.MovieUiModel
 import com.example.practice.movies.presentation.screen.MovieDetailScreen
 import com.example.practice.movies.presentation.screen.MovieListScreen
-import com.example.practice.movies.presentation.viewModel.MovieDetailViewModel
-import com.example.practice.movies.presentation.viewModel.MovieListViewModel
+import com.example.practice.movies.presentation.screen.MovieSettingsDialog
 import com.example.practice.navigation.Route
 import com.example.practice.navigation.TopLevelBackStack
 import com.example.practice.uikit.Spacing
-import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent.inject
 
 interface TopLevelRoute : Route {
@@ -49,13 +48,16 @@ data object Favorites : TopLevelRoute {
 data object Profile : TopLevelRoute {
     override val icon = Icons.Default.Person
 }
+
 data class MovieDetail(val movie: MovieUiModel) : Route
+
+data object MovieSettings : Route
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
     val topLevelBackStack by inject<TopLevelBackStack<Route>>(clazz = TopLevelBackStack::class.java)
-    val sceneStrategy = remember { SinglePaneSceneStrategy<Route>() }
+    val dialogStrategy = remember { DialogSceneStrategy<Route>() }
 
     Scaffold(
         modifier = Modifier.systemBarsPadding(),
@@ -77,15 +79,14 @@ fun MainScreen() {
             backStack = topLevelBackStack.backStack,
             onBack = { topLevelBackStack.removeLast() },
             modifier = Modifier.padding(padding),
-            sceneStrategy = sceneStrategy,
+            sceneStrategy = dialogStrategy,
             entryDecorators = listOf(
                 rememberSavedStateNavEntryDecorator(),
                 rememberViewModelStoreNavEntryDecorator()
             ),
             entryProvider = entryProvider {
                 entry<Movies> {
-                    val viewModel = koinViewModel<MovieListViewModel>()
-                    MovieListScreen(viewModel)
+                    MovieListScreen()
                 }
                 entry<Favorites> {
                     FavoritesScreen()
@@ -94,10 +95,12 @@ fun MainScreen() {
                     ProfileScreen()
                 }
                 entry<MovieDetail> {
-                    val viewModel = koinViewModel<MovieDetailViewModel>() {
-                        parametersOf(it.movie)
-                    }
-                    MovieDetailScreen(viewModel)
+                    MovieDetailScreen(it.movie)
+                }
+                entry<MovieSettings>(
+                    metadata = DialogSceneStrategy.dialog(DialogProperties())
+                ) {
+                    MovieSettingsDialog()
                 }
             }
         )

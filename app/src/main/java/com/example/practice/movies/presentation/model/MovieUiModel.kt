@@ -9,6 +9,7 @@ data class MovieUiModel(
     val alternativeName: String?,
     val description: String?,
     val year: Int?,
+    val rating: Float?,
     val posterUrl: String?,
     val genres: List<String> = emptyList(),
     val countries: List<String> = emptyList()

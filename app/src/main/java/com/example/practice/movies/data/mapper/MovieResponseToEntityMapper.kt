@@ -12,6 +12,7 @@ class MovieResponseToEntityMapper {
                 alternativeName = doc.alternativeName,
                 description = doc.description,
                 year = doc.year,
+                rating = doc.rating.kp,
                 posterUrl = doc.poster?.url,
                 genres = doc.genres.map { it.name },
                 countries = doc.countries.map { it.name }

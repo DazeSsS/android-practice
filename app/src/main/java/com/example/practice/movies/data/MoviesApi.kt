@@ -7,12 +7,13 @@ import retrofit2.http.Query
 interface MoviesApi {
     @GET("movie")
     suspend fun getMovies(
-        @Query("sortField") sortField: String = SORT_FIELD,
-        @Query("sortType") sortType: Int = SORT_TYPE,
+        @Query("sortField") sortField: String = RATING_SORT_FIELD,
+        @Query(RATING_SORT_FIELD) ratingRange: String = RATING_RANGE,
+        @Query("sortType") sortType: Int,
     ): MovieListResponse
 
     companion object {
-        private const val SORT_FIELD: String = "rating.kp"
-        private const val SORT_TYPE: Int = -1
+        private const val RATING_SORT_FIELD: String = "rating.kp"
+        private const val RATING_RANGE: String = "0.1-10"
     }
 }
