@@ -7,6 +7,7 @@ import com.example.practice.MovieSettings
 import com.example.practice.core.launchLoadingAndError
 import com.example.practice.movies.domain.interactor.MovieInteractor
 import com.example.practice.movies.domain.model.MovieEntity
+import com.example.practice.movies.presentation.model.BadgeCache
 import com.example.practice.movies.presentation.model.MovieListViewState
 import com.example.practice.movies.presentation.model.MovieUiModel
 import com.example.practice.navigation.Route
@@ -16,16 +17,26 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class MovieListViewModel(
     private val topLevelBackStack: TopLevelBackStack<Route>,
     private val interactor: MovieInteractor,
+    private val favorites: Boolean = false,
+    private val badgeCache: BadgeCache,
 ) : ViewModel() {
-    private val mutableState = MutableStateFlow(MovieListViewState())
+    private val mutableState = MutableStateFlow(
+        MovieListViewState(badgeCache = badgeCache)
+    )
     val state = mutableState.asStateFlow()
 
     init {
         loadMovies()
+        viewModelScope.launch {
+            interactor.observeHighRatingFirstSettings().collect { highRatingFirst ->
+                badgeCache.setBadgeActive(!highRatingFirst)
+            }
+        }
     }
 
     fun onMovieClick(movie: MovieUiModel) {
@@ -34,7 +45,11 @@ class MovieListViewModel(
 
     fun onRetryClick() = loadMovies()
 
-    fun onSettingsClick() = topLevelBackStack.add(MovieSettings)
+    fun onSettingsClick() {
+        topLevelBackStack.add(MovieSettings)
+    }
+
+    fun refreshMovies() = loadMovies()
 
     private fun loadMovies() {
         viewModelScope.launchLoadingAndError(
@@ -46,7 +61,13 @@ class MovieListViewModel(
 
             interactor.observeHighRatingFirstSettings()
                 .onEach { updateState(MovieListViewState.State.Loading) }
-                .map { interactor.getMovies(it) }
+                .map {
+                    if (!favorites) {
+                        interactor.getMovies(it)
+                    } else {
+                        interactor.getFavorites()
+                    }
+                }
                 .collect { movies ->
                     updateState(MovieListViewState.State.Success(mapToUi(movies)))
                 }
@@ -54,7 +75,7 @@ class MovieListViewModel(
     }
 
     private fun updateState(state: MovieListViewState.State) =
-        mutableState.update { it.copy(state = state) }
+        mutableState.update { it.copy(listState = state) }
 
     private fun mapToUi(movies: List<MovieEntity>): List<MovieUiModel> = movies.map { movie ->
         MovieUiModel(

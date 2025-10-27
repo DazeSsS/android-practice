@@ -1,4 +1,4 @@
-package com.example.practice.movies.data
+package com.example.practice.movies.data.api
 
 import com.example.practice.movies.data.model.MovieListResponse
 import retrofit2.http.GET

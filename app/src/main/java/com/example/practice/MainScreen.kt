@@ -24,7 +24,6 @@ import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDe
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.scene.DialogSceneStrategy
-import androidx.navigation3.scene.SinglePaneSceneStrategy
 import androidx.navigation3.ui.NavDisplay
 import com.example.practice.movies.presentation.model.MovieUiModel
 import com.example.practice.movies.presentation.screen.MovieDetailScreen
@@ -89,7 +88,7 @@ fun MainScreen() {
                     MovieListScreen()
                 }
                 entry<Favorites> {
-                    FavoritesScreen()
+                    MovieListScreen(favorites = true)
                 }
                 entry<Profile> {
                     ProfileScreen()
@@ -105,18 +104,6 @@ fun MainScreen() {
             }
         )
     }
-}
-
-@Composable
-fun FavoritesScreen() {
-    Text(
-        text = "This is favorites screen",
-        style = MaterialTheme.typography.displayMedium,
-        textAlign = TextAlign.Center,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = Spacing.large)
-    )
 }
 
 @Composable

@@ -14,6 +14,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
@@ -23,6 +25,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,20 +42,33 @@ import com.example.practice.movies.presentation.MockData
 import com.example.practice.movies.presentation.model.MovieListViewState
 import com.example.practice.movies.presentation.model.MovieUiModel
 import com.example.practice.movies.presentation.viewModel.MovieListViewModel
+import com.example.practice.uikit.EmptyListMessage
 import com.example.practice.uikit.FullscreenError
 import com.example.practice.uikit.FullscreenLoading
 import com.example.practice.uikit.Spacing
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 import java.util.Locale
 
 @Composable
-fun MovieListScreen() {
-    val viewModel = koinViewModel<MovieListViewModel>()
+fun MovieListScreen(
+    favorites: Boolean = false,
+) {
+    val viewModel = koinViewModel<MovieListViewModel>() {
+        parametersOf(favorites)
+    }
 
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    LaunchedEffect(favorites) {
+        if (favorites) {
+            viewModel.refreshMovies()
+        }
+    }
+
     MovieListScreenContent(
-        state.state,
+        state,
+        favorites,
         viewModel::onMovieClick,
         viewModel::onRetryClick,
         viewModel::onSettingsClick,
@@ -61,24 +77,33 @@ fun MovieListScreen() {
 
 @Composable
 fun MovieListScreenContent(
-    state: MovieListViewState.State,
+    state: MovieListViewState,
+    favorites: Boolean,
     onMovieClick: (MovieUiModel) -> Unit = {},
     onRetryClick: () -> Unit = {},
     onSettingsClick: () -> Unit = {},
 ) {
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = onSettingsClick) {
-                Icon(
-                    imageVector = Icons.Default.Settings,
-                    contentDescription = "Settings"
-                )
-            }
+            if (!favorites)
+                FloatingActionButton(onClick = onSettingsClick) {
+                    BadgedBox(
+                        badge = {
+                            if (state.badgeCache.isBadgeActive())
+                                Badge()
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = "Settings"
+                        )
+                    }
+                }
         },
         contentWindowInsets = WindowInsets(0.dp),
     ) {
         Box(Modifier.padding(it)) {
-            when (state) {
+            when (state.listState) {
                 MovieListViewState.State.Loading -> {
                     FullscreenLoading()
                 }
@@ -86,15 +111,19 @@ fun MovieListScreenContent(
                 is MovieListViewState.State.Error -> {
                     FullscreenError(
                         retry = onRetryClick,
-                        text = state.error
+                        text = state.listState.error
                     )
                 }
 
                 is MovieListViewState.State.Success -> {
-                    LazyColumn {
-                        state.data.forEach { movie ->
-                            item(key = movie.id) {
-                                MovieListItem(movie, onMovieClick)
+                    if (state.listState.data.isEmpty()) {
+                        EmptyListMessage()
+                    } else {
+                        LazyColumn {
+                            state.listState.data.forEach { movie ->
+                                item(key = movie.id) {
+                                    MovieListItem(movie, onMovieClick)
+                                }
                             }
                         }
                     }
