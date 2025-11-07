@@ -3,15 +3,19 @@ package com.example.practice.movies.presentation.screen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -24,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -41,14 +46,22 @@ import com.example.practice.R
 import com.example.practice.movies.DEFAULT_POSTER_URL
 import com.example.practice.movies.presentation.MockData
 import com.example.practice.movies.presentation.model.MovieDetailViewState
+import com.example.practice.movies.presentation.model.MovieUiModel
 import com.example.practice.movies.presentation.viewModel.MovieDetailViewModel
 import com.example.practice.uikit.Spacing
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovieDetailScreen(
-    viewModel: MovieDetailViewModel
+    movie: MovieUiModel,
 ) {
+    val viewModel = koinViewModel<MovieDetailViewModel>() {
+        parametersOf(movie)
+    }
+
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     Scaffold(
@@ -67,6 +80,17 @@ fun MovieDetailScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = null
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(
+                        onClick = { viewModel.onFavoriteChange() }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Star,
+                            tint = if (state.isFavorite) Color.Black else Color.Gray,
+                            contentDescription = null,
                         )
                     }
                 }
@@ -136,6 +160,30 @@ fun MovieDetailContent(
             }
         }
         HorizontalDivider()
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = "Рейтинг: ",
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp,
+            )
+
+            Spacer(Modifier.width(Spacing.small))
+
+            Card(
+                shape = RoundedCornerShape(16.dp),
+            ) {
+                Text(
+                    text = String.format(Locale.US, "%.2f", state.movie.rating),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .padding(horizontal = Spacing.medium),
+                )
+            }
+        }
+
         Text(
             text = buildAnnotatedString {
                 withStyle(style = SpanStyle(

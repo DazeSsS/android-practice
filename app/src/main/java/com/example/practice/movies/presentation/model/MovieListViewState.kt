@@ -1,7 +1,8 @@
 package com.example.practice.movies.presentation.model
 
 data class MovieListViewState(
-    val state: State = State.Loading,
+    val listState: State = State.Loading,
+    val badgeCache: BadgeCache,
 ) {
     sealed interface State {
         object Loading : State

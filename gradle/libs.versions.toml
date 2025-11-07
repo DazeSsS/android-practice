@@ -10,6 +10,7 @@ activityCompose = "1.11.0"
 composeBom = "2024.09.00"
 coilCompose = "2.7.0"
 koinAndroid = "4.1.0"
+ksp = "2.2.0-2.0.2"
 retrofit = "3.0.0"
 chucker = "4.2.0"
 
@@ -17,6 +18,8 @@ nav3Core = "1.0.0-alpha10"
 lifecycleViewmodelNav3 = "2.10.0-alpha04"
 kotlinSerialization = "2.2.0"
 kotlinxSerializationCore = "1.8.1"
+room = "2.8.2"
+datastorePreferences = "1.1.7"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -51,12 +54,18 @@ retrofit-serialization = { module = "com.squareup.retrofit2:converter-kotlinx-se
 chucker = { module = "com.github.chuckerteam.chucker:library", version.ref = "chucker" }
 chucker-no-op = { module = "com.github.chuckerteam.chucker:library-no-op", version.ref = "chucker" }
 
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinSerialization" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 [bundles]
 koin = [
