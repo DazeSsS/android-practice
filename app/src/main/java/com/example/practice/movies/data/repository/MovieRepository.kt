@@ -82,6 +82,5 @@ class MovieRepository(
 
     companion object {
         private const val HIGH_RATING_FIRST_KEY = "HIGH_RATING_FIRST_KEY"
-
     }
 }

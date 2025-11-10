@@ -8,7 +8,7 @@ import com.example.practice.core.launchLoadingAndError
 import com.example.practice.movies.domain.interactor.MovieInteractor
 import com.example.practice.movies.domain.model.MovieEntity
 import com.example.practice.movies.presentation.model.BadgeCache
-import com.example.practice.movies.presentation.model.MovieListViewState
+import com.example.practice.movies.presentation.model.state.MovieListViewState
 import com.example.practice.movies.presentation.model.MovieUiModel
 import com.example.practice.navigation.Route
 import com.example.practice.navigation.TopLevelBackStack

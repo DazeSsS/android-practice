@@ -45,7 +45,7 @@ import coil.compose.AsyncImage
 import com.example.practice.R
 import com.example.practice.movies.DEFAULT_POSTER_URL
 import com.example.practice.movies.presentation.MockData
-import com.example.practice.movies.presentation.model.MovieDetailViewState
+import com.example.practice.movies.presentation.model.state.MovieDetailViewState
 import com.example.practice.movies.presentation.model.MovieUiModel
 import com.example.practice.movies.presentation.viewModel.MovieDetailViewModel
 import com.example.practice.uikit.Spacing
