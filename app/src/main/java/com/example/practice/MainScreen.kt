@@ -1,6 +1,5 @@
 package com.example.practice
 
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.icons.Icons
@@ -9,16 +8,13 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
@@ -29,9 +25,10 @@ import com.example.practice.movies.presentation.model.MovieUiModel
 import com.example.practice.movies.presentation.screen.MovieDetailScreen
 import com.example.practice.movies.presentation.screen.MovieListScreen
 import com.example.practice.movies.presentation.screen.MovieSettingsDialog
+import com.example.practice.profile.presentation.screen.ProfileScreen
 import com.example.practice.navigation.Route
 import com.example.practice.navigation.TopLevelBackStack
-import com.example.practice.uikit.Spacing
+import com.example.practice.profile.presentation.screen.EditProfileScreen
 import org.koin.java.KoinJavaComponent.inject
 
 interface TopLevelRoute : Route {
@@ -51,6 +48,8 @@ data object Profile : TopLevelRoute {
 data class MovieDetail(val movie: MovieUiModel) : Route
 
 data object MovieSettings : Route
+
+data object EditProfile : Route
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -101,19 +100,10 @@ fun MainScreen() {
                 ) {
                     MovieSettingsDialog()
                 }
+                entry<EditProfile> {
+                    EditProfileScreen()
+                }
             }
         )
     }
-}
-
-@Composable
-fun ProfileScreen() {
-    Text(
-        text = "This is profile screen",
-        style = MaterialTheme.typography.displayMedium,
-        textAlign = TextAlign.Center,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = Spacing.large)
-    )
 }

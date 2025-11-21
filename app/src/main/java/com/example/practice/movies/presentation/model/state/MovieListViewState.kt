@@ -1,4 +1,7 @@
-package com.example.practice.movies.presentation.model
+package com.example.practice.movies.presentation.model.state
+
+import com.example.practice.movies.presentation.model.BadgeCache
+import com.example.practice.movies.presentation.model.MovieUiModel
 
 data class MovieListViewState(
     val listState: State = State.Loading,

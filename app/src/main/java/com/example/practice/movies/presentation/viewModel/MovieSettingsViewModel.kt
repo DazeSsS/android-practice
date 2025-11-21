@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.practice.movies.domain.interactor.MovieInteractor
 import com.example.practice.movies.presentation.model.BadgeCache
-import com.example.practice.movies.presentation.model.MovieSettingsState
+import com.example.practice.movies.presentation.model.state.MovieSettingsState
 import com.example.practice.navigation.Route
 import com.example.practice.navigation.TopLevelBackStack
 import kotlinx.coroutines.flow.MutableStateFlow

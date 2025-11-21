@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.jetbrains.kotlin.serialization)
     alias(libs.plugins.ksp)
+    id("com.google.protobuf") version "0.9.4"
 }
 
 android {
@@ -94,5 +95,24 @@ dependencies {
     annotationProcessor(libs.androidx.room.compiler)
     implementation(libs.room.ktx)
 
+    // DataStore
     implementation(libs.androidx.datastore.preferences)
+    implementation("androidx.datastore:datastore:1.1.0")
+    implementation("com.google.protobuf:protobuf-kotlin-lite:3.25.1")
+
+    implementation("androidx.compose.runtime:runtime:1.9.0")
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.25.1"
+    }
+    generateProtoTasks {
+        all().forEach { task ->
+            task.builtins {
+                create("java") { option("lite") }
+                create("kotlin") { option("lite") }
+            }
+        }
+    }
 }

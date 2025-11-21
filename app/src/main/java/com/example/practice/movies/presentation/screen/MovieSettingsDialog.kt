@@ -16,14 +16,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
-import androidx.compose.ui.window.DialogWindowProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.practice.movies.presentation.model.MovieSettingsState
+import com.example.practice.movies.presentation.model.state.MovieSettingsState
 import com.example.practice.movies.presentation.viewModel.MovieSettingsViewModel
 import com.example.practice.uikit.Spacing
 import org.koin.androidx.compose.koinViewModel

@@ -39,7 +39,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.practice.movies.DEFAULT_POSTER_URL
 import com.example.practice.movies.presentation.MockData
-import com.example.practice.movies.presentation.model.MovieListViewState
+import com.example.practice.movies.presentation.model.state.MovieListViewState
 import com.example.practice.movies.presentation.model.MovieUiModel
 import com.example.practice.movies.presentation.viewModel.MovieListViewModel
 import com.example.practice.uikit.EmptyListMessage
