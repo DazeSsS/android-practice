@@ -23,5 +23,5 @@ val profileFeatureModule = module {
     single { ProfileInteractor(get()) }
 
     viewModel { ProfileViewModel(get(), get()) }
-    viewModel { EditProfileViewModel(get(), get()) }
+    viewModel { EditProfileViewModel(get(), get(), get()) }
 }

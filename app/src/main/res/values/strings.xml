@@ -8,6 +8,7 @@
 
     <string name="name_label">Имя</string>
     <string name="link_label">Ссылка</string>
+    <string name="time_label">Время любимой пары</string>
 
     <string name="camera_choice">Камера</string>
     <string name="gallery_choice">Галерея</string>
@@ -15,4 +16,7 @@
     <string name="resume_button">Резюме</string>
 
     <string name="error_occured">Произошла ошибка</string>
+
+    <string name="notifications_channel_id">notifications_channel</string>
+    <string name="notifications_channel_name">Напоминание</string>
 </resources>
