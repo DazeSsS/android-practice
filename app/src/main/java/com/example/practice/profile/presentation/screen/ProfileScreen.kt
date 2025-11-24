@@ -101,6 +101,7 @@ fun ProfileContent(
         AsyncImage(
             model = state.photoUri,
             modifier = Modifier
+                .padding(bottom = Spacing.medium)
                 .clip(CircleShape)
                 .size(128.dp),
             contentDescription = "photo",

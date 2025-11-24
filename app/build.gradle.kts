@@ -101,6 +101,9 @@ dependencies {
     implementation("com.google.protobuf:protobuf-kotlin-lite:3.25.1")
 
     implementation("androidx.compose.runtime:runtime:1.9.0")
+
+    // Time
+    implementation("com.jakewharton.threetenabp:threetenabp:1.4.6")
 }
 
 protobuf {
