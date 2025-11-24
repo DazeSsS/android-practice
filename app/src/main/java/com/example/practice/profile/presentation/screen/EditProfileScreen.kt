@@ -253,9 +253,6 @@ fun EditProfileContent(
             value = state.timeString,
             onValueChange = { viewModel.onTimeChange(it) },
             label = { Text(stringResource(R.string.time_label)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp),
             isError = state.timeError != null,
             trailingIcon = {
                 Icon(
