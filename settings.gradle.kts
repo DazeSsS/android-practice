@@ -21,4 +21,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "Practice"
 include(":app")
- 
+include(":uikit")
+include(":core")
+include(":feature:movies")
+include(":feature:profile")

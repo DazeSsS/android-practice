@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="movie_info_title">Информация о фильме</string>
+    <string name="movies_title">Фильмы</string>
+</resources>

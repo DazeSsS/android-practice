@@ -15,20 +15,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.scene.DialogSceneStrategy
 import androidx.navigation3.ui.NavDisplay
-import com.example.practice.movies.presentation.model.MovieUiModel
-import com.example.practice.movies.presentation.screen.MovieDetailScreen
-import com.example.practice.movies.presentation.screen.MovieListScreen
-import com.example.practice.movies.presentation.screen.MovieSettingsDialog
-import com.example.practice.profile.presentation.screen.ProfileScreen
-import com.example.practice.navigation.Route
-import com.example.practice.navigation.TopLevelBackStack
-import com.example.practice.profile.presentation.screen.EditProfileScreen
+import com.example.core.navigation.EntryProviderInstaller
+import com.example.core.navigation.Route
+import com.example.core.navigation.TopLevelBackStack
+import com.example.movies.di.MOVIE_QUALIFIER
+import com.example.movies.presentation.screen.MovieListScreen
+import com.example.profile.di.PROFILE_QUALIFIER
+import com.example.profile.presentation.screen.ProfileScreen
+import org.koin.core.qualifier.named
 import org.koin.java.KoinJavaComponent.inject
 
 interface TopLevelRoute : Route {
@@ -38,24 +37,29 @@ interface TopLevelRoute : Route {
 data object Movies : TopLevelRoute {
     override val icon = Icons.AutoMirrored.Filled.List
 }
+
 data object Favorites : TopLevelRoute {
     override val icon = Icons.Default.Favorite
 }
+
 data object Profile : TopLevelRoute {
     override val icon = Icons.Default.Person
 }
-
-data class MovieDetail(val movie: MovieUiModel) : Route
-
-data object MovieSettings : Route
-
-data object EditProfile : Route
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
     val topLevelBackStack by inject<TopLevelBackStack<Route>>(clazz = TopLevelBackStack::class.java)
     val dialogStrategy = remember { DialogSceneStrategy<Route>() }
+
+    val moviesEntryProvider by inject<EntryProviderInstaller>(
+        clazz = EntryProviderInstaller::class.java,
+        qualifier = named(MOVIE_QUALIFIER)
+    )
+    val profileEntryProvider by inject<EntryProviderInstaller>(
+        clazz = EntryProviderInstaller::class.java,
+        qualifier = named(PROFILE_QUALIFIER)
+    )
 
     Scaffold(
         modifier = Modifier.systemBarsPadding(),
@@ -92,17 +96,8 @@ fun MainScreen() {
                 entry<Profile> {
                     ProfileScreen()
                 }
-                entry<MovieDetail> {
-                    MovieDetailScreen(it.movie)
-                }
-                entry<MovieSettings>(
-                    metadata = DialogSceneStrategy.dialog(DialogProperties())
-                ) {
-                    MovieSettingsDialog()
-                }
-                entry<EditProfile> {
-                    EditProfileScreen()
-                }
+                moviesEntryProvider.let { builder -> this.builder() }
+                profileEntryProvider.let { builder -> this.builder() }
             }
         )
     }
