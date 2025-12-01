@@ -24,8 +24,11 @@
             android:theme="@style/Theme.Practice">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="${applicationId}.OPEN_MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <provider
@@ -38,7 +41,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
         <receiver
-            android:name=".profile.presentation.notifications.NotificationsReceiver"
+            android:name="com.example.core.notifications.NotificationsReceiver"
             android:enabled="true"
             android:exported="false" />
     </application>

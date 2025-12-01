@@ -2,11 +2,12 @@ package com.example.practice
 
 import android.app.Application
 import androidx.core.app.NotificationManagerCompat
+import com.example.core.notifications.NotificationChannelManager
 import com.example.practice.di.dbModule
 import com.example.practice.di.mainModule
-import com.example.practice.movies.di.moviesFeatureModule
+import com.example.movies.di.moviesFeatureModule
 import com.example.practice.di.networkModule
-import com.example.practice.profile.di.profileFeatureModule
+import com.example.profile.di.profileFeatureModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin

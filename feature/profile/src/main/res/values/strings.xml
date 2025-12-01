@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="profile_title">Профиль</string>
+    <string name="edit_profile_title">Редактирование</string>
+
+    <string name="name_label">Имя</string>
+    <string name="link_label">Ссылка</string>
+    <string name="time_label">Время любимой пары</string>
+
+    <string name="camera_choice">Камера</string>
+    <string name="gallery_choice">Галерея</string>
+
+    <string name="resume_button">Резюме</string>
+</resources>

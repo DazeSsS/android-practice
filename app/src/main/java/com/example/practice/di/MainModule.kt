@@ -6,8 +6,8 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.example.practice.Movies
-import com.example.practice.navigation.Route
-import com.example.practice.navigation.TopLevelBackStack
+import com.example.core.navigation.Route
+import com.example.core.navigation.TopLevelBackStack
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 

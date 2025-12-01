@@ -1,8 +1,8 @@
 package com.example.practice.di
 
 import com.chuckerteam.chucker.api.ChuckerInterceptor
-import com.example.practice.movies.BASE_API_URL
-import com.example.practice.movies.MOVIE_API_KEY
+import com.example.movies.BASE_API_URL
+import com.example.movies.MOVIE_API_KEY
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient

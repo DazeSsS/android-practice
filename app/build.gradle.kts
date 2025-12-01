@@ -1,12 +1,9 @@
-import java.util.Properties
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.jetbrains.kotlin.serialization)
     alias(libs.plugins.ksp)
-    id("com.google.protobuf") version "0.9.4"
 }
 
 android {
@@ -21,11 +18,6 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-         val localProperties = Properties().apply {
-             load(project.rootProject.file("local.properties").inputStream())
-         }
-         buildConfigField("String", "MOVIES_API_KEY", "\"${localProperties.getProperty("MOVIES_API_KEY")}\"")
     }
 
     buildTypes {
@@ -46,7 +38,6 @@ android {
     }
     buildFeatures {
         compose = true
-        buildConfig = true
     }
 }
 
@@ -104,18 +95,9 @@ dependencies {
 
     // Time
     implementation("com.jakewharton.threetenabp:threetenabp:1.4.6")
-}
 
-protobuf {
-    protoc {
-        artifact = "com.google.protobuf:protoc:3.25.1"
-    }
-    generateProtoTasks {
-        all().forEach { task ->
-            task.builtins {
-                create("java") { option("lite") }
-                create("kotlin") { option("lite") }
-            }
-        }
-    }
+    implementation(project(":uikit"))
+    implementation(project(":core"))
+    implementation(project(":feature:movies"))
+    implementation(project(":feature:profile"))
 }

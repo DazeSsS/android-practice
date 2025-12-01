@@ -1,22 +1,3 @@
 <resources>
     <string name="app_name">Practice</string>
-
-    <string name="movie_info_title">Информация о фильме</string>
-    <string name="movies_title">Фильмы</string>
-    <string name="profile_title">Профиль</string>
-    <string name="edit_profile_title">Редактирование</string>
-
-    <string name="name_label">Имя</string>
-    <string name="link_label">Ссылка</string>
-    <string name="time_label">Время любимой пары</string>
-
-    <string name="camera_choice">Камера</string>
-    <string name="gallery_choice">Галерея</string>
-
-    <string name="resume_button">Резюме</string>
-
-    <string name="error_occured">Произошла ошибка</string>
-
-    <string name="notifications_channel_id">notifications_channel</string>
-    <string name="notifications_channel_name">Напоминание</string>
 </resources>
