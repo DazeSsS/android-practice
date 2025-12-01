@@ -8,7 +8,8 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
+import android.app.AlertDialog
+import android.os.Build
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,13 +22,18 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material3.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -51,6 +57,7 @@ import com.example.practice.profile.presentation.model.state.EditProfileState
 import com.example.practice.profile.presentation.viewModel.EditProfileViewModel
 import com.example.practice.uikit.Spacing
 import org.koin.androidx.compose.koinViewModel
+import org.threeten.bp.LocalTime
 import java.io.File
 import java.util.Date
 
@@ -80,9 +87,9 @@ fun EditProfileScreen() {
 
     val requestPermissionLauncher =
         rememberLauncherForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) { isGranted: Boolean ->
-            if (!isGranted) {
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { map: Map<String, Boolean> ->
+            if (map.values.contains(false)) {
                 val dialog = AlertDialog.Builder(context)
                     .setMessage(
                         "Для редактирования профиля предоставьте доступ к файлам.\n\n" +
@@ -97,19 +104,6 @@ fun EditProfileScreen() {
             }
             viewModel.onPermissionClose()
         }
-
-    fun onCameraSelect() {
-        val baseDir = Environment.getExternalStoragePublicDirectory(
-            Environment.DIRECTORY_PICTURES
-        )
-        val pictureFile = File(baseDir, "picture_${Date().time}.jpg")
-        imageUri = FileProvider.getUriForFile(
-            context,
-            context.packageName + ".provider",
-            pictureFile
-        )
-        imageUri?.let { mGetContent.launch(it) }
-    }
 
     Scaffold(
         contentWindowInsets = WindowInsets(0.dp),
@@ -145,25 +139,47 @@ fun EditProfileScreen() {
         EditProfileContent(
             modifier = Modifier.padding(padding),
             state = state,
-            onAvatarClick = viewModel::onAvatarClick,
-            onNameChange = { name -> viewModel.onNameChange(name) },
-            onUrlChange = { url -> viewModel.onUrlChange(url) },
+            viewModel = viewModel,
         )
     }
 
     if (state.isNeedToShowPermission) {
         LaunchedEffect(Unit) {
-            if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.Q &&
+            val permissions = mutableListOf<String>()
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q &&
                 ContextCompat.checkSelfPermission(
                     context,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
-                requestPermissionLauncher.launch(
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                )
+                permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
             }
+
+            if (
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                permissions.add(Manifest.permission.POST_NOTIFICATIONS)
+            }
+
+            requestPermissionLauncher.launch(permissions.toTypedArray())
         }
+    }
+
+    fun onCameraSelect() {
+        val baseDir = Environment.getExternalStoragePublicDirectory(
+            Environment.DIRECTORY_PICTURES
+        )
+        val pictureFile = File(baseDir, "picture_${Date().time}.jpg")
+        imageUri = FileProvider.getUriForFile(
+            context,
+            context.packageName + ".provider",
+            pictureFile
+        )
+        imageUri?.let { mGetContent.launch(it) }
     }
 
     if (state.isNeedToShowSelect) {
@@ -201,9 +217,7 @@ fun EditProfileScreen() {
 fun EditProfileContent(
     modifier: Modifier = Modifier,
     state: EditProfileState,
-    onAvatarClick: () -> Unit = {},
-    onNameChange: (String) -> Unit = {},
-    onUrlChange: (String) -> Unit = {},
+    viewModel: EditProfileViewModel,
 ) {
     Column(
         modifier = modifier
@@ -219,20 +233,91 @@ fun EditProfileContent(
                 .padding(top = Spacing.large)
                 .clip(CircleShape)
                 .size(128.dp)
-                .clickable { onAvatarClick() },
+                .clickable { viewModel.onAvatarClick() },
             error = painterResource(R.drawable.profile)
         )
 
         TextField(
             value = state.name,
-            onValueChange = { onNameChange(it) },
+            onValueChange = { viewModel.onNameChange(it) },
             label = { Text(stringResource(R.string.name_label)) },
         )
 
         TextField(
             value = state.url,
-            onValueChange = { onUrlChange(it) },
+            onValueChange = { viewModel.onUrlChange(it) },
             label = { Text(stringResource(R.string.link_label)) },
         )
+
+        TextField(
+            value = state.timeString,
+            onValueChange = { viewModel.onTimeChange(it) },
+            label = { Text(stringResource(R.string.time_label)) },
+            isError = state.timeError != null,
+            trailingIcon = {
+                Icon(
+                    painterResource(id = R.drawable.time),
+                    null,
+                    modifier = Modifier.clickable { viewModel.onTimeInputClick() })
+            }
+        )
+        state.timeError?.let {
+            Text(
+                it,
+                color = MaterialTheme.colorScheme.error,
+            )
+        }
+        if (state.isNeedToShowTimePicker) {
+            DialWithDialogExample(
+                onConfirm = { h, m -> viewModel.onTimeConfirm(h, m) },
+                onDismiss = { viewModel.onTimeDialogDismiss() },
+                time = state.time
+            )
+        }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DialWithDialogExample(
+    onConfirm: (Int, Int) -> Unit,
+    onDismiss: () -> Unit,
+    time: LocalTime
+) {
+    val timePickerState = rememberTimePickerState(
+        initialHour = time.hour,
+        initialMinute = time.minute,
+        is24Hour = true,
+    )
+
+    TimePickerDialog(
+        onDismiss = { onDismiss() },
+        onConfirm = { onConfirm(timePickerState.hour, timePickerState.minute) }
+    ) {
+        TimePicker(
+            state = timePickerState,
+        )
+    }
+}
+
+@Composable
+fun TimePickerDialog(
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit,
+    content: @Composable () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        dismissButton = {
+            TextButton(onClick = { onDismiss() }) {
+                Text("Отмена")
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = { onConfirm() }) {
+                Text("OK")
+            }
+        },
+        text = { content() }
+    )
 }
